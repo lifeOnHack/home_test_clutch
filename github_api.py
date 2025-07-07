@@ -1,6 +1,8 @@
 import os, requests
 from typing import Dict,List
+from dotenv import load_dotenv
 
+load_dotenv()  # טען משתני סביבה מ-.env
 GITHUB_API_URL = "https://api.github.com"
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
@@ -34,3 +36,22 @@ def get_user_tokens(username: str) -> List[Dict]:
     response = requests.get(url, headers=get_github_headers())
     response.raise_for_status()
     return response.json()
+
+def test_get_org_members():
+    org = os.getenv("GITHUB_ORG")
+    members = get_org_members(org)
+    print(f"✅ Found {len(members)} members in org '{org}'")
+    for member in members:
+        print(f"- {member.get('login')} | {member.get('id')}")
+
+def test_get_user_tokens():
+    # דוגמת משתמש לבדיקה
+    username = "bigbrolinus"  # החלף בשם משתמש קיים בארגון שלך
+    user_info = get_user_tokens(username)
+    print(f"✅ Info for '{username}':")
+    print(user_info)
+
+
+if __name__ == "__main__":
+    test_get_org_members()
+    test_get_user_tokens()
