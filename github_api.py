@@ -39,15 +39,31 @@ def get_user_tokens(username: str) -> List[Dict]:
 
 def get_PAT_events(org = os.getenv("GITHUB_ORG")):
     """
-    get all PAT events from git enterprise
+    Get all PAT grant events from GitHub Audit Log with pagination.
     """
     url = f'{GITHUB_API_URL}/orgs/{org}/audit-log'
     params = {
         "phrase": "action:org_credential_authorization.grant",
+        "per_page": 100
     }
-    response = requests.get(url, headers=get_github_headers())
-    response.raise_for_status()
-    return response.json()
+
+    results = []
+    while url:
+        response = requests.get(url, headers=get_github_headers())
+        response.raise_for_status()
+        page_results = response.json()
+        results.extend(page_results)
+
+        # Handle pagination: look for 'Link' header
+        links = response.links
+        if 'next' in links:
+            url = links['next']['url']
+            params = {}  # params כבר בפנים בקישור
+        else:
+            url = None
+
+    return results
+
 
 
 
@@ -70,4 +86,4 @@ if __name__ == "__main__":
     #test_get_user_tokens()
     events = get_PAT_events()
     print(len(events))
-    [print(event) for event in events]
+    [print(event['action']) for event in events]
