@@ -37,6 +37,20 @@ def get_user_tokens(username: str) -> List[Dict]:
     response.raise_for_status()
     return response.json()
 
+def get_PAT_events(org = os.getenv("GITHUB_ORG")):
+    """
+    get all PAT events from git enterprise
+    """
+    url = f'{GITHUB_API_URL}/orgs/{org}/audit-log'
+    params = {
+        "phrase": "action:org_credential_authorization.grant",
+    }
+    response = requests.get(url, headers=get_github_headers())
+    response.raise_for_status()
+    return response.json()
+
+
+
 def test_get_org_members():
     org = os.getenv("GITHUB_ORG")
     members = get_org_members(org)
@@ -50,8 +64,10 @@ def test_get_user_tokens():
     user_info = get_user_tokens(username)
     print(f"✅ Info for '{username}':")
     print(user_info)
-
-
+    
 if __name__ == "__main__":
-    test_get_org_members()
-    test_get_user_tokens()
+    #test_get_org_members()
+    #test_get_user_tokens()
+    events = get_PAT_events()
+    print(len(events))
+    [print(event) for event in events]
