@@ -86,4 +86,4 @@ if __name__ == "__main__":
     #test_get_user_tokens()
     events = get_PAT_events()
     print(len(events))
-    [print(event['action']) for event in events]
+    [print(event) for event in events]
