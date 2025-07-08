@@ -1,6 +1,12 @@
 # GitHub - Okta Integration Script
 
-## Requirements
+## 🗂️ What This Does
+
+- Fetches GitHub PAT events (SSO grants)
+- Fetches Okta user information
+- Correlates them to show which Okta user created which PAT
+
+# Requirements
 
 - Python 3.8+
 - Install dependencies:
