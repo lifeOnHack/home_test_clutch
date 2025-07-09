@@ -20,6 +20,7 @@ Create a `.env` file with the following vars:
 - OKTA_DOMAIN
 - OKTA_API_TOKEN
 
+authorize the github token with the github organization
 run main.py and the script will print correlated users between GitHub and Okta.
 
 ----- PAT NOTES -------
