@@ -25,3 +25,11 @@ run main.py and the script will print correlated users between GitHub and Okta.
 ----- PAT NOTES -------
 
 - When using GitHub Enterprise SSO, you must authorize your Personal Access Token (PAT) for your organization under Developer Settings.
+
+- GitHub REST API does NOT expose PATs directly for security.
+  In practice, you'd use the Audit Log API or GitHub Advanced Security.
+
+------- Scalability ---------
+the main function gets parameters you can modify to fetch data
+from others APIs, notice you need to match the .env variables to the correct tokens
+needed for the platform you are using

@@ -14,14 +14,19 @@ def get_okta_headers() -> Dict[str, str]:
     }
 
 
-def get_okta_users() -> List[Dict]:
+def get_okta_users(url = f"{OKTA_API_URL}/users", headers=get_okta_headers()) -> List[Dict]:
+    """Fetch all users in the Okta org.
+
+    Args:
+        url (str, optional): the url to fetch the usres. Defaults to f"{OKTA_API_URL}/users".
+        headers ([dict], optional): the headers one wants to add. Defaults to get_okta_headers().
+
+    Returns:
+        List[Dict]: list of okta users
     """
-    Fetch all users in the Okta org.
-    """
-    url = f"{OKTA_API_URL}/users"
     results = []
     while url:
-        response = requests.get(url, headers=get_okta_headers())
+        response = requests.get(url, headers=headers)
         response.raise_for_status()
         results.extend(response.json())
         links = response.links

@@ -18,7 +18,7 @@ def correlate_github_okta(
         okta_users (List[Dict]): users on okta organization
 
     Returns:
-        List[Dict]: _description_
+        List[Dict]: list of correlated user to PAT events
     """
     results = []
 
@@ -55,7 +55,7 @@ def filter_pat_events(corrlations: List[Dict], filter_func) -> List[Dict]:
     Filters PAT events based on a provided filter function.
 
     Args:
-        corrlations (List[Dict]): List of corrlations between PAT events and okta users to filter.
+        corrlations (List[Dict]): List of corrlations between PAT events and users to filter.
         filter_func (Callable[[Dict], bool]): A function that takes a PAT event
             as input and returns a boolean indicating whether the event should
             be included in the result.
@@ -65,11 +65,36 @@ def filter_pat_events(corrlations: List[Dict], filter_func) -> List[Dict]:
     """
     return [pat for pat in corrlations if filter_func(pat)]
 
+def find_correlation(PATs_list: List[Dict], user_list: List[Dict], corr_func=correlate_github_okta) -> Dict:
+    """use the correlation function to find the correlation between PATs and users
+
+    Args:
+        PATs_list (List[Dict]): _description_
+        user_list (List[Dict]): _description_
+        corr_func (_type_, optional): _description_. Defaults to correlate_github_okta.
+
+    Returns:
+        Dict: _description_
+    """
+    return corr_func(PATs_list, user_list)
+
+
+def save_data_to_file(data: any,save_method, file_path: str = "pat_okta_correlation.json") -> None:
+    """save data to file
+
+    Args:
+        data (any): data to write into a file
+        save_method (function): the function to save the data gets the data and the file opend
+        file_path (str): the path to the file. Defaults to "pat_okta_correlation.json".
+    """
+    with open(file_path, "w") as f:
+        save_method(data, f)
 
 if __name__ == "__main__":
     from github_api import get_PAT_events
     from okta_api import get_okta_users
     
     cor = correlate_github_okta(get_PAT_events(), get_okta_users())
+    print(f"✅ Found {len(cor)} correlations")
     for c in cor:
         print(c)
